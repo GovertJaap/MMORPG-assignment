@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Users.findByLastPayment", query = "SELECT u FROM Users u WHERE u.lastPayment = :lastPayment"),
     @NamedQuery(name = "Users.findByMonthsPayed", query = "SELECT u FROM Users u WHERE u.monthsPayed = :monthsPayed"),
     @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
-    @NamedQuery(name = "Users.findByBanned", query = "SELECT u FROM Users u WHERE u.banned = :banned")})
+    @NamedQuery(name = "Users.findByBanned", query = "SELECT u FROM Users u WHERE u.banned = :banned"),
+    @NamedQuery(name = "Users.findByCharacterSlots", query = "SELECT u FROM Users u WHERE u.characterSlots = :characterSlots")})
 public class Users implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,6 +63,8 @@ public class Users implements Serializable {
     private String password;
     @Column(name = "banned")
     private Boolean banned;
+    @Column(name = "character_slots")
+    private Integer characterSlots;
     @ManyToMany(mappedBy = "usersCollection")
     private Collection<Servers> serversCollection;
     @ManyToMany(mappedBy = "usersCollection")
@@ -70,6 +73,19 @@ public class Users implements Serializable {
     public Users() {
     }
 
+    public Users(String userName, Integer balance, String firstName, String lastName, String iban, Date lastPayment, Integer monthsPayed, String password, Boolean banned, Integer characterSlots) {
+        this.userName = userName;
+        this.balance = balance;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.iban = iban;
+        this.lastPayment = lastPayment;
+        this.monthsPayed = monthsPayed;
+        this.password = password;
+        this.banned = banned;
+        this.characterSlots = characterSlots;
+    }
+    
     public Users(String userName) {
         this.userName = userName;
     }
@@ -146,6 +162,14 @@ public class Users implements Serializable {
         this.banned = banned;
     }
 
+    public Integer getCharacterSlots() {
+        return characterSlots;
+    }
+
+    public void setCharacterSlots(Integer characterSlots) {
+        this.characterSlots = characterSlots;
+    }
+    
     @XmlTransient
     public Collection<Servers> getServersCollection() {
         return serversCollection;
