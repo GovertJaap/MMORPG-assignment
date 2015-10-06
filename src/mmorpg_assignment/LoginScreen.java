@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,10 +41,10 @@ public class LoginScreen extends javax.swing.JFrame {
     public LoginScreen() throws UnsupportedLookAndFeelException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+        } 
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
         initComponents();
-        
     }
 
     /**
@@ -219,6 +221,8 @@ public class LoginScreen extends javax.swing.JFrame {
             if (checkUser != null) {
                 if (checkUser.getPassword().equals(password)) {
                     JOptionPane.showConfirmDialog(null, "You've succesfully logged in!", "Succes", JOptionPane.PLAIN_MESSAGE);  
+                    this.dispose();
+                    new UserManagement(username).setVisible(true);
                 }
                 else {
                     JOptionPane.showConfirmDialog(null, "The password is not correct.", "Error", JOptionPane.PLAIN_MESSAGE);    
