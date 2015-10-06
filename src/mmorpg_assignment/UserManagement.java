@@ -5,6 +5,13 @@
  */
 package mmorpg_assignment;
 
+import java.awt.Component;
+import static java.lang.Integer.parseInt;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author gover_000
@@ -51,12 +58,22 @@ public class UserManagement extends javax.swing.JFrame {
         jLabel1.setText("User Management");
 
         Backbutton.setText("Back");
+        Backbutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackbuttonActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Add Money: ");
 
         MoneyAmountTxtfield.setText("Amount");
 
         MoneyTransaction.setText("Complete transaction");
+        MoneyTransaction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MoneyTransactionActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Renovate Subscription");
 
@@ -79,12 +96,22 @@ public class UserManagement extends javax.swing.JFrame {
 
         RenovateButton.setText("Renovate");
         RenovateButton.setActionCommand("");
+        RenovateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RenovateButtonActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Buy Character slots");
 
         SlotsTxtfield.setText("Amount");
 
         SlotsButton.setText("Buy Slots");
+        SlotsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SlotsButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,6 +188,22 @@ public class UserManagement extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_threeMonthsButtonActionPerformed
 
+    private void MoneyTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MoneyTransactionActionPerformed
+        Transaction(parseInt(MoneyAmountTxtfield.getText()));
+    }//GEN-LAST:event_MoneyTransactionActionPerformed
+
+    private void RenovateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RenovateButtonActionPerformed
+        renovate();
+    }//GEN-LAST:event_RenovateButtonActionPerformed
+
+    private void SlotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SlotsButtonActionPerformed
+        Slots(parseInt(SlotsTxtfield.getText()));
+    }//GEN-LAST:event_SlotsButtonActionPerformed
+
+    private void BackbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackbuttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BackbuttonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -196,6 +239,51 @@ public class UserManagement extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void Transaction (Integer Amount) {
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+                Users checkUser = em.find(Users.class, "govert");
+                if (checkUser.getBalance() != null) {
+                    checkUser.setBalance( checkUser.getBalance() + Amount);
+                } else {
+                    checkUser.setBalance(Amount);
+                }
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    }
+    
+    private void Slots (Integer Amount) {
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+                Users checkUser = em.find(Users.class, "govert");
+                if (checkUser.getBalance() < Amount) {
+                    JOptionPane.showConfirmDialog(null, "You don't have enough balance for this many character slots", "Alert",JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    if (checkUser.getCharacterSlots() != null){
+                       checkUser.setCharacterSlots( checkUser.getCharacterSlots() + Amount); 
+                    } else {
+                        checkUser.setCharacterSlots(5 + Amount);
+                    }
+                }  
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    }
+    
+    private void renovate() {
+        
+    }
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Backbutton;
