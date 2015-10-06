@@ -5,11 +5,26 @@
  */
 package mmorpg_assignment;
 
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -19,9 +34,15 @@ public class LoginScreen extends javax.swing.JFrame {
 
     /**
      * Creates new form LoginScreen
+     * @throws javax.swing.UnsupportedLookAndFeelException
      */
-    public LoginScreen() {
+    public LoginScreen() throws UnsupportedLookAndFeelException {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+        }
         initComponents();
+        
     }
 
     /**
@@ -33,24 +54,18 @@ public class LoginScreen extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         jtUsername = new javax.swing.JTextField();
-        jtPassword = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jtUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtUsernameActionPerformed(evt);
-            }
-        });
-
-        jtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtPasswordActionPerformed(evt);
             }
         });
 
@@ -75,46 +90,51 @@ public class LoginScreen extends javax.swing.JFrame {
 
         jLabel3.setText("Password:");
 
+        jtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtPasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(166, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                            .addComponent(jtUsername)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(219, 219, 219))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(143, 143, 143))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtUsername)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                    .addComponent(jtPassword))
+                .addGap(219, 219, 219))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 174, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(143, 143, 143))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(98, 98, 98)
+                .addGap(103, 103, 103)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addGap(139, 139, 139))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,21 +151,22 @@ public class LoginScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtUsernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtUsernameActionPerformed
-
     private void jtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtPasswordActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //        String Register = JOptionPane.showInputDialog(jPanel2, "Fill in username", null);
+        Register();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Login(jtUsername.getText(), jtPassword.getText());
+        Login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jtUsernameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,31 +198,95 @@ public class LoginScreen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginScreen().setVisible(true);
+                try {
+                    new LoginScreen().setVisible(true);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
-    private void Login(String Username, String Password) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
-        EntityManager em = emf.createEntityManager();
-        
-        em.getTransaction().begin();
-        Users checkUser = em.find(Users.class, Username);
-        if (checkUser != null) {
-            if (checkUser.getPassword().equals(Password)) {
-                System.out.println("Password is correct!");
+    private void Login() {
+        String username = jtUsername.getText();
+        String password = jtPassword.getText();
+        if (!username.equals("") && !password.equals("")) {
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+            EntityManager em = emf.createEntityManager();
+
+            em.getTransaction().begin();
+            Users checkUser = em.find(Users.class, username);
+            if (checkUser != null) {
+                if (checkUser.getPassword().equals(password)) {
+                    JOptionPane.showConfirmDialog(null, "You've succesfully logged in!", "Succes", JOptionPane.PLAIN_MESSAGE);  
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "The password is not correct.", "Error", JOptionPane.PLAIN_MESSAGE);    
+                }
             }
             else {
-                System.out.println("Password is not correct!");
+                JOptionPane.showConfirmDialog(null, "The user does not exist.", "Error", JOptionPane.PLAIN_MESSAGE);    
             }
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
         }
         else {
-            System.out.println("User doesn't exist");
-        }
-        em.getTransaction().commit();
-        em.close();
-        emf.close();
+            JOptionPane.showConfirmDialog(null, "Not all fields were filled in", "Error", JOptionPane.PLAIN_MESSAGE);    
+        }       
+    }
+    
+    private void Register() {  
+        JPanel newAccount = new JPanel(new GridLayout(0,1));
+        JTextField usernameField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        JTextField firstNameField = new JTextField();
+        JTextField lastNameField = new JTextField();
+        JTextField ibanField = new JTextField();
+        newAccount.add(new JLabel("Username: "));
+        newAccount.add(usernameField);
+        newAccount.add(new JLabel("Password: "));
+        newAccount.add(passwordField);
+        newAccount.add(new JLabel("First Name: "));
+        newAccount.add(firstNameField);
+        newAccount.add(new JLabel("Last Name: "));
+        newAccount.add(lastNameField);
+        newAccount.add(new JLabel("Iban Number: "));
+        newAccount.add(ibanField);
+        
+        int result = JOptionPane.showConfirmDialog(null, newAccount, "Register Account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            String firstName = firstNameField.getText();
+            String lastName = lastNameField.getText();
+            String iban = ibanField.getText();
+            if (!username.equals("") && !password.equals("") && !firstName.equals("") && !lastName.equals("") && !iban.equals("")) {
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+                EntityManager em = emf.createEntityManager();
+                em.getTransaction().begin();
+                
+                Users checkUser = em.find(Users.class, username);
+                if (checkUser == null) {
+                    Users newUser = new Users(username, 50, firstName, lastName, iban, new Date(), 5, password, Boolean.FALSE, 5);
+                    em.persist(newUser);
+                    JOptionPane.showConfirmDialog(null, "Your account was succesfully created!", "Succes", JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "This username was already taken.", "Failure", JOptionPane.PLAIN_MESSAGE);
+                    Register();
+                }
+
+                em.getTransaction().commit();
+                em.close();
+                emf.close();
+                System.out.println(usernameField.getText() + " " + passwordField.getText());
+            }
+            else {
+                JOptionPane.showConfirmDialog(null, "Not all fields were filled in", "Error", JOptionPane.PLAIN_MESSAGE);
+                Register();
+            }
+        } 
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -211,7 +296,7 @@ public class LoginScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jtPassword;
+    private javax.swing.JPasswordField jtPassword;
     private javax.swing.JTextField jtUsername;
     // End of variables declaration//GEN-END:variables
 }
