@@ -53,6 +53,13 @@ public class Characters implements Serializable {
 
     public Characters() {
     }
+    
+    public Characters(String name, String class1, String race, Integer level) {
+        this.name = name;
+        this.class1 = class1;
+        this.race = race;
+        this.level = level;
+    }
 
     public Characters(String name) {
         this.name = name;
