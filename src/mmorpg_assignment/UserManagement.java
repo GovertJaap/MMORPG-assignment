@@ -10,12 +10,20 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import static java.lang.Integer.parseInt;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -41,7 +49,7 @@ public class UserManagement extends javax.swing.JFrame {
         
         Users checkUser = em.find(Users.class, usernameLogIn);
         balanceCurrent = checkUser.getBalance();
-        MoneyAmountTxtfield1.setText(balanceCurrent.toString()); 
+        MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-"); 
         slotsCurrent = checkUser.getCharacterSlots();
         SlotsTxtfield1.setText(slotsCurrent.toString());
         monthsCurrent = checkUser.getMonthsPayed();
@@ -93,11 +101,11 @@ public class UserManagement extends javax.swing.JFrame {
         MoneyAmountTxtfield = new javax.swing.JTextField();
         MoneyTransaction = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        OneMonthButton = new javax.swing.JRadioButton();
-        twoMonthsButton = new javax.swing.JRadioButton();
-        threeMonthsButton = new javax.swing.JRadioButton();
-        YearButton = new javax.swing.JRadioButton();
-        RenovateButton = new javax.swing.JButton();
+        SubscriptionMonth1 = new javax.swing.JRadioButton();
+        SubscriptionMonth2 = new javax.swing.JRadioButton();
+        SubscriptionMonth3 = new javax.swing.JRadioButton();
+        SubscriptionMonth4 = new javax.swing.JRadioButton();
+        RenewButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         SlotsTxtfield = new javax.swing.JTextField();
         SlotsButton = new javax.swing.JButton();
@@ -144,32 +152,37 @@ public class UserManagement extends javax.swing.JFrame {
 
         jLabel3.setText("Renew Subscription:");
 
-        buttonGroup1.add(OneMonthButton);
-        OneMonthButton.setText("1 month (5)");
+        buttonGroup1.add(SubscriptionMonth1);
+        SubscriptionMonth1.setText("1 month (€ 5,-)");
 
-        buttonGroup1.add(twoMonthsButton);
-        twoMonthsButton.setText("2 months (8)");
+        buttonGroup1.add(SubscriptionMonth2);
+        SubscriptionMonth2.setText("2 months (€ 8,-)");
 
-        buttonGroup1.add(threeMonthsButton);
-        threeMonthsButton.setText("3 months (10)");
-        threeMonthsButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(SubscriptionMonth3);
+        SubscriptionMonth3.setText("3 months (€ 11,-)");
+        SubscriptionMonth3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                threeMonthsButtonActionPerformed(evt);
+                SubscriptionMonth3ActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(YearButton);
-        YearButton.setText("1 year (35)");
-
-        RenovateButton.setText("Renovate");
-        RenovateButton.setActionCommand("");
-        RenovateButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(SubscriptionMonth4);
+        SubscriptionMonth4.setText("1 year (€ 35,-)");
+        SubscriptionMonth4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RenovateButtonActionPerformed(evt);
+                SubscriptionMonth4ActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Buy character slots:");
+        RenewButton.setText("Renew");
+        RenewButton.setActionCommand("");
+        RenewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RenewButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Buy character slots (€ 5,-):");
 
         SlotsTxtfield.setText("Amount");
 
@@ -213,75 +226,79 @@ public class UserManagement extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Backbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(Backbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(25, 25, 25))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(MoneyAmountTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(MoneyAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(MoneyAmountTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(MoneyAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(MoneyTransaction, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(49, 49, 49)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(OneMonthButton)
+                                    .addComponent(SubscriptionMonth1)
                                     .addComponent(jLabel3)
-                                    .addComponent(twoMonthsButton)
-                                    .addComponent(threeMonthsButton)
-                                    .addComponent(YearButton)
-                                    .addComponent(RenovateButton)))
+                                    .addComponent(SubscriptionMonth2)
+                                    .addComponent(SubscriptionMonth3)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(RenewButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(SubscriptionMonth4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SubscriptionAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(65, 65, 65)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(SlotsTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
-                                .addGap(32, 32, 32)
-                                .addComponent(SlotsTxtfield))
-                            .addComponent(SlotsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SlotsTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(SlotsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(SlotsTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(269, 269, 269)
                         .addComponent(jLabel1)))
-                .addGap(0, 55, Short.MAX_VALUE))
+                .addGap(0, 61, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(MoneyAmountTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel7)
-                                .addComponent(SubscriptionAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(SubscriptionAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(MoneyAmountTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(OneMonthButton))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
                                     .addComponent(MoneyAmountTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(MoneyTransaction))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SubscriptionMonth1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(MoneyTransaction))))
+                                .addComponent(SubscriptionMonth2))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(SlotsTxtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -292,15 +309,13 @@ public class UserManagement extends javax.swing.JFrame {
                             .addComponent(SlotsTxtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(SlotsButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(twoMonthsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(threeMonthsButton)
+                .addComponent(SubscriptionMonth3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(YearButton)
+                .addComponent(SubscriptionMonth4)
                 .addGap(18, 18, 18)
-                .addComponent(RenovateButton)
-                .addGap(19, 19, 19)
+                .addComponent(RenewButton)
+                .addGap(29, 29, 29)
                 .addComponent(Backbutton)
                 .addGap(36, 36, 36))
         );
@@ -342,17 +357,19 @@ public class UserManagement extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void threeMonthsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threeMonthsButtonActionPerformed
+    private void SubscriptionMonth3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubscriptionMonth3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_threeMonthsButtonActionPerformed
+    }//GEN-LAST:event_SubscriptionMonth3ActionPerformed
 
     private void MoneyTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MoneyTransactionActionPerformed
         Transaction(MoneyAmountTxtfield.getText());
     }//GEN-LAST:event_MoneyTransactionActionPerformed
 
-    private void RenovateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RenovateButtonActionPerformed
-        renovate();
-    }//GEN-LAST:event_RenovateButtonActionPerformed
+    private void RenewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RenewButtonActionPerformed
+//        System.out.println(buttonGroup1.getSelection().isSelected());
+//        buttonGroup1.getSelection();
+        Renew();
+    }//GEN-LAST:event_RenewButtonActionPerformed
 
     private void SlotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SlotsButtonActionPerformed
         Slots(SlotsTxtfield.getText());
@@ -378,6 +395,10 @@ public class UserManagement extends javax.swing.JFrame {
     private void SubscriptionAmountTxtfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubscriptionAmountTxtfieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SubscriptionAmountTxtfieldActionPerformed
+
+    private void SubscriptionMonth4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubscriptionMonth4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SubscriptionMonth4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -436,11 +457,11 @@ public class UserManagement extends javax.swing.JFrame {
                 balanceCurrent = checkUser.getBalance();
                 balanceCurrent = balanceCurrent + AmountIntBalance;
                 checkUser.setBalance(balanceCurrent);
-                MoneyAmountTxtfield1.setText(balanceCurrent.toString());       
+                MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");       
                 em.getTransaction().commit();
                 em.close();
                 emf.close(); 
-                JOptionPane.showConfirmDialog(null, "You've succesfully added € " + AmountIntBalance + ",- to your balance.", "Succes",JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showConfirmDialog(null, "You've succesfully added € " + AmountIntBalance + ",- to your balance", "Succes",JOptionPane.PLAIN_MESSAGE);
             }
         } 
     }
@@ -454,10 +475,10 @@ public class UserManagement extends javax.swing.JFrame {
             JOptionPane.showConfirmDialog(null, "You didn't fill in a valid input", "Alert",JOptionPane.PLAIN_MESSAGE);
         }
         if(AmountIntSlots != null) {
-            if (AmountIntSlots < 0) {
+            if ((AmountIntSlots * 5) < 0) {
                 JOptionPane.showConfirmDialog(null, "You can't enter a negative number", "Alert",JOptionPane.PLAIN_MESSAGE);
             }
-            else if (AmountIntSlots > balanceCurrent) {
+            else if ((AmountIntSlots * 5) > balanceCurrent) {
                 JOptionPane.showConfirmDialog(null, "You don't have enough money to buy that many slots!", "Alert",JOptionPane.PLAIN_MESSAGE);
             }
             else {
@@ -469,9 +490,9 @@ public class UserManagement extends javax.swing.JFrame {
                 slotsCurrent = slotsCurrent + AmountIntSlots;
                 checkUser.setCharacterSlots(slotsCurrent);
                 SlotsTxtfield1.setText(slotsCurrent.toString());
-                balanceCurrent = balanceCurrent - AmountIntSlots;
+                balanceCurrent = balanceCurrent - (AmountIntSlots * 5);
                 checkUser.setBalance(balanceCurrent);
-                MoneyAmountTxtfield1.setText(balanceCurrent.toString());       
+                MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");       
                 em.getTransaction().commit();
                 em.close();
                 emf.close();
@@ -479,11 +500,82 @@ public class UserManagement extends javax.swing.JFrame {
         }          
     }
     
-    private void renovate() {
-        
+    private void Renew() {
+        if (buttonGroup1.getSelection() == null) {
+            JOptionPane.showConfirmDialog(null, "You didn't select a subscription amount", "Alert",JOptionPane.PLAIN_MESSAGE);
+        }
+        else {
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+            EntityManager em = emf.createEntityManager();
+
+            em.getTransaction().begin();
+            Users checkUser = em.find(Users.class, usernameLogIn);
+
+            if (SubscriptionMonth1.isSelected() == true) {
+                if (balanceCurrent >= 5) {
+                    balanceCurrent = balanceCurrent - 5;
+                    checkUser.setBalance(balanceCurrent);
+                    MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");
+                    monthsCurrent = monthsCurrent + 1;
+                    checkUser.setMonthsPayed(monthsCurrent);
+                    SubscriptionAmountTxtfield.setText(monthsCurrent.toString());
+                    checkUser.setLastPayment(new Date());
+                    JOptionPane.showConfirmDialog(null, "You've succesfully added 1 month of subscription to your account", "Succes",JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "Sorry you don't have enough money for that subscription", "Alert",JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+            else if (SubscriptionMonth2.isSelected() == true){
+                if (balanceCurrent >= 8) {
+                    balanceCurrent = balanceCurrent - 8;
+                    checkUser.setBalance(balanceCurrent);
+                    MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");
+                    monthsCurrent = monthsCurrent + 2;
+                    checkUser.setMonthsPayed(monthsCurrent);
+                    SubscriptionAmountTxtfield.setText(monthsCurrent.toString());
+                    checkUser.setLastPayment(new Date());
+                    JOptionPane.showConfirmDialog(null, "You've succesfully added 2 months of subscription to your account", "Succes",JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "Sorry you don't have enough money for that subscription", "Alert",JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+            else if (SubscriptionMonth3.isSelected() == true){
+                if (balanceCurrent >= 11) {
+                    balanceCurrent = balanceCurrent - 11;
+                    checkUser.setBalance(balanceCurrent);
+                    MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");
+                    monthsCurrent = monthsCurrent + 3;
+                    checkUser.setMonthsPayed(monthsCurrent);
+                    SubscriptionAmountTxtfield.setText(monthsCurrent.toString());
+                    checkUser.setLastPayment(new Date());
+                    JOptionPane.showConfirmDialog(null, "You've succesfully added 3 months of subscription to your account", "Succes",JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "Sorry you don't have enough money for that subscription", "Alert",JOptionPane.PLAIN_MESSAGE);
+                }
+            }     
+            else {
+                if (balanceCurrent >= 35) {
+                    balanceCurrent = balanceCurrent - 35;
+                    checkUser.setBalance(balanceCurrent);
+                    MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");
+                    monthsCurrent = monthsCurrent + 12;
+                    checkUser.setMonthsPayed(monthsCurrent);
+                    SubscriptionAmountTxtfield.setText(monthsCurrent.toString());
+                    checkUser.setLastPayment(new Date());
+                    JOptionPane.showConfirmDialog(null, "You've succesfully added 1 year of subscription to your account", "Succes",JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "Sorry you don't have enough money for that subscription", "Alert",JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
+        }    
     }
-    
-    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -491,13 +583,15 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JTextField MoneyAmountTxtfield;
     private javax.swing.JTextField MoneyAmountTxtfield1;
     private javax.swing.JButton MoneyTransaction;
-    private javax.swing.JRadioButton OneMonthButton;
-    private javax.swing.JButton RenovateButton;
+    private javax.swing.JButton RenewButton;
     private javax.swing.JButton SlotsButton;
     private javax.swing.JTextField SlotsTxtfield;
     private javax.swing.JTextField SlotsTxtfield1;
     private javax.swing.JTextField SubscriptionAmountTxtfield;
-    private javax.swing.JRadioButton YearButton;
+    private javax.swing.JRadioButton SubscriptionMonth1;
+    private javax.swing.JRadioButton SubscriptionMonth2;
+    private javax.swing.JRadioButton SubscriptionMonth3;
+    private javax.swing.JRadioButton SubscriptionMonth4;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JLabel jLabel1;
@@ -510,7 +604,5 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JRadioButton threeMonthsButton;
-    private javax.swing.JRadioButton twoMonthsButton;
     // End of variables declaration//GEN-END:variables
 }

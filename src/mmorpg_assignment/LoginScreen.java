@@ -5,20 +5,13 @@
  */
 package mmorpg_assignment;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,7 +19,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.LineBorder;
 
 /**
  *
@@ -220,6 +212,9 @@ public class LoginScreen extends javax.swing.JFrame {
             Users checkUser = em.find(Users.class, username);
             if (checkUser != null) {
                 if (checkUser.getPassword().equals(password)) {
+                    em.getTransaction().commit();
+                    em.close();
+                    emf.close();
                     JOptionPane.showConfirmDialog(null, "You've succesfully logged in!", "Succes", JOptionPane.PLAIN_MESSAGE);  
                     this.dispose();
                     new UserManagement(username).setVisible(true);
@@ -231,9 +226,7 @@ public class LoginScreen extends javax.swing.JFrame {
             else {
                 JOptionPane.showConfirmDialog(null, "The user does not exist.", "Error", JOptionPane.PLAIN_MESSAGE);    
             }
-            em.getTransaction().commit();
-            em.close();
-            emf.close();
+
         }
         else {
             JOptionPane.showConfirmDialog(null, "Not all fields were filled in", "Error", JOptionPane.PLAIN_MESSAGE);    
@@ -272,19 +265,19 @@ public class LoginScreen extends javax.swing.JFrame {
                 
                 Users checkUser = em.find(Users.class, username);
                 if (checkUser == null) {
-                    Users newUser = new Users(username, 50, firstName, lastName, iban, new Date(), 5, password, Boolean.FALSE, 5);
+                    Users newUser = new Users(username, 5, firstName, lastName, iban, new Date(), 5, password, Boolean.FALSE, 5);
                     em.persist(newUser);
+                    em.getTransaction().commit();
+                    em.close();
+                    emf.close();
                     JOptionPane.showConfirmDialog(null, "Your account was succesfully created!", "Succes", JOptionPane.PLAIN_MESSAGE);
+                    this.dispose();
+                    new UserManagement(username).setVisible(true);
                 }
                 else {
                     JOptionPane.showConfirmDialog(null, "This username was already taken.", "Failure", JOptionPane.PLAIN_MESSAGE);
                     Register();
                 }
-
-                em.getTransaction().commit();
-                em.close();
-                emf.close();
-                System.out.println(usernameField.getText() + " " + passwordField.getText());
             }
             else {
                 JOptionPane.showConfirmDialog(null, "Not all fields were filled in", "Error", JOptionPane.PLAIN_MESSAGE);
