@@ -159,7 +159,7 @@ public class UserManagement extends javax.swing.JFrame {
         SubscriptionMonth2.setText("2 months (€ 8,-)");
 
         buttonGroup1.add(SubscriptionMonth3);
-        SubscriptionMonth3.setText("3 months (€ 11,-)");
+        SubscriptionMonth3.setText("3 months (€ 10,-)");
         SubscriptionMonth3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SubscriptionMonth3ActionPerformed(evt);
@@ -182,7 +182,7 @@ public class UserManagement extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Buy character slots (€ 5,-):");
+        jLabel4.setText("Buy character slots (€ 1,-):");
 
         SlotsTxtfield.setText("Amount");
 
@@ -475,10 +475,10 @@ public class UserManagement extends javax.swing.JFrame {
             JOptionPane.showConfirmDialog(null, "You didn't fill in a valid input", "Alert",JOptionPane.PLAIN_MESSAGE);
         }
         if(AmountIntSlots != null) {
-            if ((AmountIntSlots * 5) < 0) {
+            if (AmountIntSlots < 0) {
                 JOptionPane.showConfirmDialog(null, "You can't enter a negative number", "Alert",JOptionPane.PLAIN_MESSAGE);
             }
-            else if ((AmountIntSlots * 5) > balanceCurrent) {
+            else if (AmountIntSlots > balanceCurrent) {
                 JOptionPane.showConfirmDialog(null, "You don't have enough money to buy that many slots!", "Alert",JOptionPane.PLAIN_MESSAGE);
             }
             else {
@@ -490,7 +490,7 @@ public class UserManagement extends javax.swing.JFrame {
                 slotsCurrent = slotsCurrent + AmountIntSlots;
                 checkUser.setCharacterSlots(slotsCurrent);
                 SlotsTxtfield1.setText(slotsCurrent.toString());
-                balanceCurrent = balanceCurrent - (AmountIntSlots * 5);
+                balanceCurrent = balanceCurrent - AmountIntSlots;
                 checkUser.setBalance(balanceCurrent);
                 MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");       
                 em.getTransaction().commit();
@@ -542,8 +542,8 @@ public class UserManagement extends javax.swing.JFrame {
                 }
             }
             else if (SubscriptionMonth3.isSelected() == true){
-                if (balanceCurrent >= 11) {
-                    balanceCurrent = balanceCurrent - 11;
+                if (balanceCurrent >= 10) {
+                    balanceCurrent = balanceCurrent - 10;
                     checkUser.setBalance(balanceCurrent);
                     MoneyAmountTxtfield1.setText("€ " + balanceCurrent.toString() + ",-");
                     monthsCurrent = monthsCurrent + 3;
