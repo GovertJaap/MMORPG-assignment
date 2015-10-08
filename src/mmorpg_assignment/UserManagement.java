@@ -5,42 +5,31 @@
  */
 package mmorpg_assignment;
 
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import static java.lang.Integer.parseInt;
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author gover_000
+ * @author Govert Jaap
+ * @author Luuk Tito        
  */
 public class UserManagement extends javax.swing.JFrame {
 
@@ -49,6 +38,10 @@ public class UserManagement extends javax.swing.JFrame {
     public Integer slotsCurrent = 0;
     public Integer monthsCurrent = 0;
     public Collection<Characters> characters = null;
+    public Integer charactersAmount = 0;
+    public Collection<Servers> servers = null;
+    public Servers connectedServer = null;
+        
     /**
      * Creates new form NewJFrame
      */
@@ -70,9 +63,21 @@ public class UserManagement extends javax.swing.JFrame {
         characters = checkUser.getCharactersCollection();
         characterSlotsCurrentText.setText(slotsCurrent.toString());
         charactersCurrentText1.setText(Integer.toString(characters.size()));
-
+        
+        servers = em.createNamedQuery("Servers.findAll").getResultList();
+        
         updateCharacters();
-                
+        updateCharacterInfo();
+        updateServers();
+
+        jComboBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    updateCharacterInfo();
+                }
+            }
+        });
+        
         em.getTransaction().commit();
         em.close();
         emf.close();
@@ -82,7 +87,6 @@ public class UserManagement extends javax.swing.JFrame {
                  MoneyAmountTxtfield.setText("");
             }
              public void focusLost(FocusEvent e) { 
-                 //
             }
         });
                 
@@ -91,9 +95,14 @@ public class UserManagement extends javax.swing.JFrame {
                  SlotsTxtfield.setText("");
             }
              public void focusLost(FocusEvent e) { 
-                 //
             }
         });
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+        public void run() {
+            disconnectServer();
+        }
+        }));
     }
     
     public UserManagement() {
@@ -144,7 +153,6 @@ public class UserManagement extends javax.swing.JFrame {
         createCharacter = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel12 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel14 = new javax.swing.JLabel();
@@ -157,6 +165,8 @@ public class UserManagement extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        serverConnectButton = new javax.swing.JButton();
+        Backbutton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -400,7 +410,6 @@ public class UserManagement extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -408,8 +417,6 @@ public class UserManagement extends javax.swing.JFrame {
         });
 
         jLabel12.setText("Select server to join:");
-
-        jButton2.setText("Go Online!");
 
         jLabel13.setText("Select character:");
 
@@ -437,10 +444,32 @@ public class UserManagement extends javax.swing.JFrame {
 
         jLabel18.setText("Level:");
 
+        serverConnectButton.setText("Go Online!");
+        serverConnectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serverConnectButtonActionPerformed(evt);
+            }
+        });
+
+        Backbutton1.setText("Back");
+        Backbutton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Backbutton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(246, 246, 246))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -459,18 +488,6 @@ public class UserManagement extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(35, 35, 35))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -482,26 +499,37 @@ public class UserManagement extends javax.swing.JFrame {
                                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
-                                .addComponent(jLabel17)
-                                .addGap(66, 66, 66)
-                                .addComponent(jLabel18))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel17)
+                                        .addGap(66, 66, 66)
+                                        .addComponent(jLabel18))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel15)
+                                        .addGap(66, 66, 66)
+                                        .addComponent(jLabel16)))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(51, 51, 51)
-                                .addComponent(jLabel14))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addComponent(jLabel15)
-                                .addGap(66, 66, 66)
-                                .addComponent(jLabel16)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(jLabel14)
+                                .addGap(184, 184, 184)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(serverConnectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, 0, 100, Short.MAX_VALUE))
+                        .addGap(35, 35, 35))))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel8)
-                .addGap(246, 246, 246))
+                .addGap(42, 42, 42)
+                .addComponent(Backbutton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -523,16 +551,17 @@ public class UserManagement extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(charactersCurrentText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(charactersCurrentText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(createCharacter, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel14)
-                        .addGap(4, 4, 4)
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14)
+                            .addComponent(serverConnectButton))
+                        .addGap(9, 9, 9)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
                             .addComponent(jLabel16))
@@ -548,7 +577,9 @@ public class UserManagement extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addComponent(Backbutton1)
+                .addGap(60, 60, 60))
         );
 
         jTabbedPane1.addTab("Character Management", jPanel2);
@@ -592,6 +623,7 @@ public class UserManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_SlotsButtonActionPerformed
 
     private void BackbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackbuttonActionPerformed
+        disconnectServer();
         this.dispose();
         try {
             new LoginScreen().setVisible(true);
@@ -636,6 +668,20 @@ public class UserManagement extends javax.swing.JFrame {
         createCharacter();
     }//GEN-LAST:event_createCharacterActionPerformed
 
+    private void serverConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverConnectButtonActionPerformed
+        connectServer();
+    }//GEN-LAST:event_serverConnectButtonActionPerformed
+
+    private void Backbutton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Backbutton1ActionPerformed
+        disconnectServer();
+        this.dispose();
+        try {
+            new LoginScreen().setVisible(true);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_Backbutton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -671,6 +717,80 @@ public class UserManagement extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void updateServers() {
+        jComboBox1.removeAllItems();
+        for (int i = 0; i < servers.size(); i++) {
+            Collection<Servers> servers2 = servers;
+            while (servers2.iterator().hasNext() == true) {
+                jComboBox1.addItem(servers2.iterator().next().getName());
+                servers2.remove(servers2.iterator().next());
+            }
+        }
+    }
+    
+    private void disconnectServer() {
+        if (connectedServer != null) {
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+
+            connectedServer.setConnectedUsers(connectedServer.getConnectedUsers() - 1);
+            Query query = em.createNativeQuery("Delete from stores where (user_name)=(?);");
+            query.setParameter(1, usernameLogIn);
+            query.executeUpdate();
+            em.merge(connectedServer);
+
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
+            connectedServer = null;
+        }
+    }
+    
+    private void connectServer() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        
+        em.getEntityManagerFactory().getCache().evict(Users.class, usernameLogIn);
+        Users checkUser = em.find(Users.class, usernameLogIn);
+
+        if (jComboBox2.getItemAt(0) != "You have no characters") {
+            if (checkUser.getBanned() == true) {
+                JOptionPane.showConfirmDialog(null, "Sorry, you cannot play whilst your account is banned", "Alert", JOptionPane.PLAIN_MESSAGE);
+            }
+            else if (checkUser.getMonthsPayed() == 0) {
+                JOptionPane.showConfirmDialog(null, "Sorry your subscription has expired!", "Alert", JOptionPane.PLAIN_MESSAGE);
+            }
+            else if (connectedServer != null) {
+                JOptionPane.showConfirmDialog(null, "You're already connected to a server, please exit the program to try again", "Alert", JOptionPane.PLAIN_MESSAGE);
+            }
+            else {
+                Servers server = (Servers) em.createNamedQuery("Servers.findByName").setParameter("name", jComboBox1.getSelectedItem().toString()).getSingleResult();
+                if (server.getConnectedUsers() < server.getMaxUsers()) {
+                    server.setConnectedUsers(server.getConnectedUsers() + 1);
+                    Query query = em.createNativeQuery( "insert into stores (adress,user_name) values (?,?);");
+                    query.setParameter(1, server.getAdress());
+                    query.setParameter(2, usernameLogIn);
+                    query.executeUpdate();
+                    connectedServer = server;
+                    JOptionPane.showConfirmDialog(null, "You've succesfully connected to our server!", "Succes", JOptionPane.PLAIN_MESSAGE);
+                }
+                else {
+                    JOptionPane.showConfirmDialog(null, "Sorry this server is full, please select another one.", "Alert", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+        }
+        else {
+            JOptionPane.showConfirmDialog(null, "Please select a character first", "Alert", JOptionPane.PLAIN_MESSAGE);
+        }
+        
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    }
+    
     private void updateCharacters() {
         jComboBox2.removeAllItems();
         if (characters.size() > 0) {
@@ -682,6 +802,26 @@ public class UserManagement extends javax.swing.JFrame {
         }
         else {
             jComboBox2.addItem("You have no characters");
+        }
+    }
+    
+    private void updateCharacterInfo() {
+        if (jComboBox2.getItemAt(0) != "You have no characters") {
+            String characterName = jComboBox2.getSelectedItem().toString();
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+
+            Characters checkCharacter = em.find(Characters.class, characterName);
+            jTextField1.setText(characterName);
+            jTextField2.setText(checkCharacter.getClass1());
+            jTextField3.setText(checkCharacter.getRace());
+            jTextField4.setText(checkCharacter.getLevel().toString());
+            
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
+
         }
     }
     
@@ -710,10 +850,11 @@ public class UserManagement extends javax.swing.JFrame {
                     EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
                     EntityManager em = emf.createEntityManager();
                     em.getTransaction().begin();
+                    em.getEntityManagerFactory().getCache().evict(Users.class, usernameLogIn);
 
                     Characters checkCharacter = em.find(Characters.class, characterName);
                     if (checkCharacter == null) {
-                        Users checkUser = em.find(Users.class, usernameLogIn);
+                        
                         Random rand = new Random();
                         int level = rand.nextInt(100) + 1;
                         Characters newCharacterData = new Characters(characterName, className, raceName, level);
@@ -723,13 +864,18 @@ public class UserManagement extends javax.swing.JFrame {
                         query.setParameter(1, characterName);
                         query.setParameter(2, usernameLogIn);
                         query.executeUpdate();
+
+                        Users checkUser = em.find(Users.class, usernameLogIn);
                         characters = checkUser.getCharactersCollection();
                         charactersCurrentText1.setText(Integer.toString(characters.size()));
+                        
                         em.getTransaction().commit();
                         em.close();
                         emf.close();
 
+                        
                         updateCharacters();
+                        updateCharacterInfo();
                         JOptionPane.showConfirmDialog(null, "Your character was succesfully created!", "Succes", JOptionPane.PLAIN_MESSAGE);
                     }
                     else {
@@ -893,6 +1039,7 @@ public class UserManagement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Backbutton;
+    private javax.swing.JButton Backbutton1;
     private javax.swing.JTextField MoneyAmountTxtfield;
     private javax.swing.JTextField MoneyAmountTxtfield1;
     private javax.swing.JButton MoneyTransaction;
@@ -910,7 +1057,6 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JTextField characterSlotsCurrentText;
     private javax.swing.JTextField charactersCurrentText1;
     private javax.swing.JButton createCharacter;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -940,5 +1086,6 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JButton serverConnectButton;
     // End of variables declaration//GEN-END:variables
 }

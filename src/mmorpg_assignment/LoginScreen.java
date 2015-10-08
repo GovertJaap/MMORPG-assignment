@@ -22,7 +22,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author Luuk
+ * @author Luuk Tito
  */
 public class LoginScreen extends javax.swing.JFrame {
 
