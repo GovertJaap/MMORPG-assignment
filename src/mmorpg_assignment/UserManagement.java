@@ -167,6 +167,8 @@ public class UserManagement extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         serverConnectButton = new javax.swing.JButton();
         Backbutton1 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -583,6 +585,32 @@ public class UserManagement extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Character Management", jPanel2);
 
+        jButton1.setText("Add Data");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(311, 311, 311)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(313, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(161, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Admin panel", jPanel3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -680,6 +708,10 @@ public class UserManagement extends javax.swing.JFrame {
             Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_Backbutton1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        addData();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1035,6 +1067,83 @@ public class UserManagement extends javax.swing.JFrame {
         }    
     }
     
+    public Random r = new Random();
+    
+    public String generateString(int length){
+            String ret = "";
+            while(ret.length() < length) {
+                    int c = (r.nextInt((126 - 33) + 1) + 33);
+                    ret += (c > 64 && c < 91) || (c > 96 && c < 123) ? (char)c : "";
+            }
+            return ret;
+    }
+    
+    
+    private void addData() {
+        int randInt = r.nextInt(10);
+        Boolean randBool = r.nextBoolean();
+        String[] classes = { "Warrior", "Thief", "Mage", "Ranger" };
+        String[] races = { "Human", "Elf", "Dwarf", "Sorceress", "Witcher" };
+        
+        for (int i = 0; i < 1000 ; i++) {
+        //new User
+        String username = generateString( randInt + randInt);
+        String firstName = generateString( randInt + randInt);
+        String lastName = generateString( randInt + randInt);
+        String iban = generateString( randInt + randInt);
+        String password  = generateString( randInt + randInt);
+        int balance = randInt + randInt;
+        Boolean banned = randBool;
+        Date newDate = new Date(); 
+        int monthsPayed = randInt;
+        int characterSlots = 5;
+        
+        //new server
+        String serverAdress = generateString( randInt + randInt);
+        String serverName = generateString( randInt + randInt);
+        String location = generateString( randInt + randInt);
+        int maxUsers = randInt * 100;
+        int connectedUsers = randInt * 9 - 10;
+        
+        //new Character
+        String characterName = generateString( randInt + randInt);
+        int randClass = r.nextInt(classes.length);
+        int randRace = r.nextInt(races.length);
+        int level = r.nextInt(100) + 1;
+        
+        
+        
+        
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        
+        Users newUserData = new Users(username, balance, firstName, lastName, iban,newDate, monthsPayed, password , banned , characterSlots);
+        Servers newServer = new Servers(serverAdress, serverName, location, maxUsers, connectedUsers);
+        Characters newCharacterData = new Characters(characterName, classes[randClass], races[randRace], level);
+        
+        em.persist(newUserData); 
+        em.persist(newServer);
+        em.persist(newCharacterData);
+        
+        Query query1 = em.createNativeQuery( "insert into owns (name,user_name) values (?,?);");
+        query1.setParameter(1, characterName);
+        query1.setParameter(2, username);
+        query1.executeUpdate();
+                        
+        Query query2 = em.createNativeQuery( "insert into stores (adress,user_name) values (?,?);");
+        query2.setParameter(1, serverAdress);
+        query2.setParameter(2, username);
+        query2.executeUpdate();
+        
+        
+        
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Backbutton;
@@ -1056,6 +1165,7 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JTextField characterSlotsCurrentText;
     private javax.swing.JTextField charactersCurrentText1;
     private javax.swing.JButton createCharacter;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -1078,6 +1188,7 @@ public class UserManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;

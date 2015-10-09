@@ -57,8 +57,12 @@ public class Servers implements Serializable {
     public Servers() {
     }
 
-    public Servers(String adress) {
+    public Servers(String adress, String name, String location, Integer max_users, Integer connected_users) {
         this.adress = adress;
+        this.name = name;
+        this.location = location;
+        this.maxUsers = max_users;
+        this.connectedUsers = connected_users;
     }
 
     public String getAdress() {
