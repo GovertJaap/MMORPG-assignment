@@ -6,10 +6,10 @@
     <class>mmorpg_assignment.Characters</class>
     <class>mmorpg_assignment.Users</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:9502/MMORPG_database"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/MMORPG_database"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="boefje96519962"/>
+      <property name="javax.persistence.jdbc.password" value="Emperor1"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>
   </persistence-unit>
