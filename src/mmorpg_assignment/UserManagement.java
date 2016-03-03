@@ -1080,12 +1080,14 @@ public class UserManagement extends javax.swing.JFrame {
     
     
     private void addData() {
-        int randInt = r.nextInt(10);
-        Boolean randBool = r.nextBoolean();
+
         String[] classes = { "Warrior", "Thief", "Mage", "Ranger" };
         String[] races = { "Human", "Elf", "Dwarf", "Sorceress", "Witcher" };
         
         for (int i = 0; i < 1000 ; i++) {
+            
+        int randInt = r.nextInt(10);
+        Boolean randBool = r.nextBoolean();
         //new User
         String username = generateString( randInt + randInt);
         String firstName = generateString( randInt + randInt);

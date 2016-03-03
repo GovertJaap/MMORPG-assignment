@@ -229,7 +229,8 @@ public class LoginScreen extends javax.swing.JFrame {
 
         }
         else {
-            JOptionPane.showConfirmDialog(null, "Not all fields were filled in", "Error", JOptionPane.PLAIN_MESSAGE);    
+            tryAdminLogin();
+              
         }       
     }
     
@@ -284,6 +285,29 @@ public class LoginScreen extends javax.swing.JFrame {
                 Register();
             }
         } 
+    }
+    
+    
+    private void tryAdminLogin() 
+    {
+            String answer = JOptionPane.showInputDialog(null, "Are you an admin?" , "Do you want to Login anyway?",JOptionPane.PLAIN_MESSAGE);
+            if (answer.equals("yes")) {
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("MMORPG_assignmentPU");
+                EntityManager em = emf.createEntityManager();
+
+                em.getTransaction().begin();
+                Users checkUser = em.find(Users.class, "a");
+                if (checkUser != null) {
+                    if (checkUser.getPassword().equals("a")) {
+                        em.getTransaction().commit();
+                        em.close();
+                        emf.close();
+                        JOptionPane.showConfirmDialog(null, "You've succesfully logged in!", "Succes", JOptionPane.PLAIN_MESSAGE);  
+                        this.dispose();
+                        new UserManagement("a").setVisible(true);
+                    }  
+                }
+            }  
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
